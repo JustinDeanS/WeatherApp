@@ -5,8 +5,48 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-size: cover;
-    background-position: center;
+    background-color: #282c34;
+    color: white;
     padding: 20px;
+  }
+  
+  .MuiCard-root {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 400px;
+    transition: transform 0.3s;
+  }
+  
+  .MuiCard-root:hover {
+    transform: scale(1.05);
+  }
+  
+  .MuiCardContent-root {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .weather-icon {
+    margin-top: 10px;
+  }
+  
+  .input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .input-container .MuiTextField-root {
+    margin-right: 10px;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 20px;
   }
   
