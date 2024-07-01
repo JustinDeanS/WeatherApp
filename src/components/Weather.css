@@ -1,0 +1,12 @@
+/* src/components/Weather.css */
+.weather-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+  }
+  
