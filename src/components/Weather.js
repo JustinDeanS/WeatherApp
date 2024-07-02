@@ -93,7 +93,7 @@ const Weather = () => {
 
   const getWeather = async () => {
     try {
-      const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.REACT_APP_WEATHER_API_KEY}&units=metric`);
+      const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.REACT_APP_WEATHER_API_KEY}&units=imperial`);
       setWeather(response.data);
     } catch (error) {
       console.error('Error fetching the weather data:', error);
@@ -122,7 +122,7 @@ const Weather = () => {
           <WeatherIcon>{getWeatherIcon(weather.weather[0].main)}</WeatherIcon>
           <h2>{weather.name}</h2>
           <WeatherDetails>
-            <p>Temperature: {weather.main.temp} °C</p>
+            <p>Temperature: {weather.main.temp} °F</p>
             <p>Condition: {weather.weather[0].description}</p>
             <p>Humidity: {weather.main.humidity} %</p>
             <p>Wind Speed: {weather.wind.speed} m/s</p>
