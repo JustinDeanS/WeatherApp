@@ -9,12 +9,15 @@ const WeatherContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
   height: 100vh;
   background: linear-gradient(135deg, #72EDF2 10%, #5151E5 100%);
   color: #fff;
   font-family: 'Arial', sans-serif;
   text-align: center;
   padding: 20px;
+  box-sizing: border-box;
+  transition: background 0.5s ease;
 `;
 
 const Title = styled.h1`
