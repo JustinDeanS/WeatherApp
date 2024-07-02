@@ -1,73 +1,136 @@
-// src/components/Weather.js
 import React, { useState } from 'react';
-import { getWeather } from '../services/weatherService';
-import { TextField, Button, Card, CardContent, Typography, CircularProgress } from '@mui/material';
-import { WiDaySunny, WiRain, WiCloudy, WiSnow, WiFog, WiHumidity, WiStrongWind } from 'react-icons/wi';
+import axios from 'axios';
+import styled from 'styled-components';
+import { WiDaySunny, WiDayCloudy, WiRain, WiSnow, WiFog } from 'react-icons/wi';
 import './Weather.css';
+
+const WeatherContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #72EDF2 10%, #5151E5 100%);
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  padding: 20px;
+`;
+
+const Title = styled.h1`
+  font-size: 3rem;
+  margin-bottom: 20px;
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+`;
+
+const SearchInput = styled.input`
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+`;
+
+const SearchButton = styled.button`
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #3333cc;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: #2a2aa1;
+  }
+`;
+
+const WeatherCard = styled.div`
+  background: rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
+  margin-top: 20px;
+`;
+
+const WeatherIcon = styled.div`
+  font-size: 4rem;
+  margin-bottom: 20px;
+`;
+
+const WeatherDetails = styled.div`
+  font-size: 1.2rem;
+`;
+
+const getWeatherIcon = (main) => {
+  switch (main) {
+    case 'Clear':
+      return <WiDaySunny />;
+    case 'Clouds':
+      return <WiDayCloudy />;
+    case 'Rain':
+      return <WiRain />;
+    case 'Snow':
+      return <WiSnow />;
+    case 'Fog':
+    case 'Mist':
+      return <WiFog />;
+    default:
+      return <WiDaySunny />;
+  }
+};
 
 const Weather = () => {
   const [city, setCity] = useState('');
   const [weather, setWeather] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
-  const handleSearch = async () => {
-    setLoading(true);
-    setError('');
+  const getWeather = async () => {
     try {
-      const data = await getWeather(city);
-      setWeather(data);
-    } catch (err) {
-      setError('City not found or API error.');
+      const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.REACT_APP_WEATHER_API_KEY}&units=metric`);
+      setWeather(response.data);
+    } catch (error) {
+      console.error('Error fetching the weather data:', error);
     }
-    setLoading(false);
+  };
+
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    await getWeather();
   };
 
   return (
-    <div className="weather-container">
-      <div className="input-container">
-        <TextField
-          label="Enter city"
-          variant="outlined"
+    <WeatherContainer>
+      <Title>Weather App</Title>
+      <SearchContainer>
+        <SearchInput
+          type="text"
+          placeholder="Enter city name"
           value={city}
           onChange={(e) => setCity(e.target.value)}
         />
-        <Button variant="contained" color="primary" onClick={handleSearch} disabled={loading}>
-          {loading ? <CircularProgress size={24} /> : 'Get Weather'}
-        </Button>
-      </div>
-      {error && <Typography className="error-message">{error}</Typography>}
-      {weather && !loading && (
-        <Card className="MuiCard-root">
-          <CardContent className="MuiCardContent-root">
-            <Typography variant="h5">{weather.name}</Typography>
-            <Typography variant="body2">{weather.weather[0].description}</Typography>
-            <div className="weather-icon">{getWeatherIcon(weather.weather[0].description)}</div>
-            <Typography variant="body2">Temperature: {weather.main.temp} °C</Typography>
-            <Typography variant="body2"><WiHumidity size={24} /> Humidity: {weather.main.humidity}%</Typography>
-            <Typography variant="body2"><WiStrongWind size={24} /> Wind Speed: {weather.wind.speed} m/s</Typography>
-          </CardContent>
-        </Card>
+        <SearchButton onClick={handleSearch}>Search</SearchButton>
+      </SearchContainer>
+      {weather && (
+        <WeatherCard>
+          <WeatherIcon>{getWeatherIcon(weather.weather[0].main)}</WeatherIcon>
+          <h2>{weather.name}</h2>
+          <WeatherDetails>
+            <p>Temperature: {weather.main.temp} °C</p>
+            <p>Condition: {weather.weather[0].description}</p>
+            <p>Humidity: {weather.main.humidity} %</p>
+            <p>Wind Speed: {weather.wind.speed} m/s</p>
+          </WeatherDetails>
+        </WeatherCard>
       )}
-    </div>
+    </WeatherContainer>
   );
-};
-
-const getWeatherIcon = (description) => {
-  switch (description.toLowerCase()) {
-    case 'clear sky':
-      return <WiDaySunny size={50} />;
-    case 'rain':
-      return <WiRain size={50} />;
-    case 'clouds':
-      return <WiCloudy size={50} />;
-    case 'snow':
-      return <WiSnow size={50} />;
-    case 'fog':
-      return <WiFog size={50} />;
-    default:
-      return null;
-  }
-};
+}
 
 export default Weather;
