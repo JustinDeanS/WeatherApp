@@ -108,6 +108,8 @@ const Weather = () => {
     await getWeather();
   };
 
+  const convertWindSpeedToMph = (speedInMps) => (speedInMps * 2.237).toFixed(2);
+
   return (
     <WeatherContainer>
       <Title>Weather App</Title>
@@ -128,7 +130,7 @@ const Weather = () => {
             <p>Temperature: {weather.main.temp} °F</p>
             <p>Condition: {weather.weather[0].description}</p>
             <p>Humidity: {weather.main.humidity} %</p>
-            <p>Wind Speed: {weather.wind.speed} m/s</p>
+            <p>Wind Speed: {convertWindSpeedToMph(weather.wind.speed)} mph</p>
           </WeatherDetails>
         </WeatherCard>
       )}
